@@ -1,0 +1,76 @@
+a code to filter the business days based on the regions ( Asia, Europe and North America)?
+
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
+public class BusinessDaysFilter {
+
+    public static void main(String[] args) {
+        // Example usage of the filterBusinessDays method
+        List<LocalDate> dates = new ArrayList<>();
+        dates.add(LocalDate.of(2023, 3, 1));
+        dates.add(LocalDate.of(2023, 3, 2));
+        dates.add(LocalDate.of(2023, 3, 3));
+        dates.add(LocalDate.of(2023, 3, 4));
+        dates.add(LocalDate.of(2023, 3, 5));
+        dates.add(LocalDate.of(2023, 3, 6));
+        dates.add(LocalDate.of(2023, 3, 7));
+        List<LocalDate> filteredDates = filterBusinessDays(dates, "Asia");
+        for (LocalDate date : filteredDates) {
+            System.out.println(date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        }
+    }
+
+    /**
+     * Filters the given list of dates to only include business days based on the given region.
+     * Valid region values are "Asia", "Europe", and "North America".
+     * 
+     * @param dates The list of dates to filter.
+     * @param region The region to filter by.
+     * @return The filtered list of dates.
+     */
+    public static List<LocalDate> filterBusinessDays(List<LocalDate> dates, String region) {
+        List<LocalDate> filteredDates = new ArrayList<>();
+        ZoneId zoneId = null;
+        switch (region.toLowerCase(Locale.ENGLISH)) {
+            case "asia":
+                zoneId = ZoneId.of("Asia/Kolkata");
+                break;
+            case "europe":
+                zoneId = ZoneId.of("Europe/London");
+                break;
+            case "north america":
+                zoneId = ZoneId.of("America/New_York");
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid region: " + region);
+        }
+        for (LocalDate date : dates) {
+            if (isBusinessDay(date, zoneId)) {
+                filteredDates.add(date);
+            }
+        }
+        return filteredDates;
+    }
+
+    /**
+     * Determines whether the given date is a business day based on the given time zone.
+     * 
+     * @param date The date to check.
+     * @param zoneId The time zone to check against.
+     * @return true if the date is a business day, false otherwise.
+     */
+    private static boolean isBusinessDay(LocalDate date, ZoneId zoneId) {
+        DayOfWeek dayOfWeek = date.atStartOfDay(zoneId).getDayOfWeek();
+        if (dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY) {
+            return false;
+        }
+        // add any region-specific holidays here
+        return true;
+    }
+}

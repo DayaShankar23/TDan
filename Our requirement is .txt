@@ -1,0 +1,6 @@
+Our requirement is : 
+we have business day : Mon to Fri 
+when i m trigger Mon then next it ll trigger Thrusay (leave 2 bussiness day (Tue,Wed))
+when i am  trigger Friday then next we ll trigger at Monday (Bcz saturday and Sunday are not in Business day)
+
+we have to write a rule in different different regions also bcz our identities are from another country also.
